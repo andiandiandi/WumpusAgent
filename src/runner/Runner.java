@@ -15,7 +15,11 @@ public class Runner {
 	private Mapper mapper = new Mapper();
 
 	private Tupel pos = new Tupel(1, 1);
-
+	
+	private boolean turnleft = false;
+	private boolean turnright = false;
+	int count = -1;
+	
 	public Runner() {
 
 	}
@@ -38,7 +42,7 @@ public class Runner {
 			tracker.update(pos,this.percept.getWumpusStenchRadar()[0][1],mapper.getNoWumpus());
 		
 		
-		
+		//debug
 		System.out.println("traps");
 		for(Tupel t : mapper.getPotentialTraps())
 			t.print();
@@ -52,8 +56,31 @@ public class Runner {
 	}
 
 	public AgentAction getNextAction() {
-		pos = new Tupel(pos.getI()+1,pos.getJ());
-		return AgentAction.GO_FORWARD;
+
+		count++;	
+		
+		if(count==1){
+			turnright=true;
+			turnleft=false;
+			nextAction = AgentAction.TURN_RIGHT;
+			return nextAction;
+		}else if(count==3){
+			turnleft=true;
+			turnright=false;
+			nextAction = AgentAction.TURN_LEFT;
+			count=-1;
+			return nextAction;
+		}else{
+			nextAction = AgentAction.GO_FORWARD;
+			if(count==2)
+				pos = new Tupel(pos.getI(),pos.getJ()+1);
+			if(count==0)
+				pos = new Tupel(pos.getI()+1,pos.getJ());
+			
+		}
+		
+		
+		return nextAction;
 	}
 
 }
